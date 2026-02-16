@@ -7,7 +7,18 @@ This course provides an introduction to Effective Field Theory (EFT) and experim
 
 ## Viewing the Course
 
-The course website is automatically deployed to GitHub Pages: [https://mpresill.github.io/KSETA_2026/](https://mpresill.github.io/KSETA_2026/)
+The course website will be automatically deployed to GitHub Pages at: [https://mpresill.github.io/KSETA_2026/](https://mpresill.github.io/KSETA_2026/)
+
+### Enabling GitHub Pages
+
+To enable GitHub Pages for the first time:
+
+1. Go to your repository settings on GitHub
+2. Navigate to "Pages" in the left sidebar
+3. Under "Build and deployment", select "Source": **GitHub Actions**
+4. The site will automatically build and deploy when you push to the `main` branch
+
+After the first successful deployment, the website will be available at the URL above.
 
 ## Building the Book Locally
 
