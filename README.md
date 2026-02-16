@@ -20,6 +20,18 @@ To enable GitHub Pages for the first time:
 
 After the first successful deployment, the website will be available at the URL above.
 
+## Course Structure
+
+The course website is organized into the following sections:
+
+- **Course Overview**: Detailed course objectives and structure
+- **Introduction to EFT**: Interactive Jupyter notebook with Python examples
+- **Experimental Measurements**: Hands-on data analysis notebook
+- **Slides**: Course presentation slides (add your slides to `slides.md`)
+- **Tutorial**: Hands-on tutorial materials (add content to `tutorial.md`)
+- **Supplementary Material**: Additional resources (add to `supplementary.md`)
+- **References**: Bibliography and references (managed via `references.bib` and `references.md`)
+
 ## Building the Book Locally
 
 To build and view the book locally on your machine:
@@ -52,27 +64,34 @@ To build and view the book locally on your machine:
    start _build/html/index.html
    ```
 
-## Course Structure
-
-The course includes:
-- **Introduction**: Course overview and objectives
-- **EFT Theory**: Theoretical foundations of Effective Field Theory
-- **Experimental Methods**: Detector principles and data analysis
-- **Interactive Notebooks**: Hands-on exercises using Jupyter notebooks
-
 ## Editing the Course
 
 To modify the course content:
 
-1. Edit the markdown files (`.md`) or Jupyter notebooks (`.ipynb`) in the repository
-2. Update the table of contents in `_toc.yml` if adding new sections
-3. Modify the book configuration in `_config.yml` as needed
-4. Push changes to the `main` branch - the website will automatically rebuild and deploy
+1. **Edit content files**: Modify the markdown files (`.md`) or Jupyter notebooks (`.ipynb`)
+2. **Update table of contents**: Edit `_toc.yml` to add or reorganize sections
+3. **Modify configuration**: Update `_config.yml` for book settings
+4. **Add references**: Add BibTeX entries to `references.bib`
+5. **Push changes**: Commit and push to `main` - the website will automatically rebuild
+
+## Adding Content
+
+- **Slides**: Edit `slides.md` and add links to your slide files
+- **Tutorial Materials**: Edit `tutorial.md` or add new Jupyter notebooks to the `notebooks/` directory
+- **Supplementary Material**: Edit `supplementary.md`
+- **References**: Add BibTeX entries to `references.bib` and organize them in `references.md`
+
+## Configuration Files
+
+- `_config.yml`: Main Jupyter Book configuration (title, author, repository links)
+- `_toc.yml`: Table of contents structure
+- `requirements.txt`: Python dependencies needed to build the book
+- `.github/workflows/deploy.yml`: GitHub Actions workflow for automatic deployment
 
 ## Requirements
 
 - Python 3.8+
-- Jupyter Book
+- Jupyter Book 0.15.x
 - NumPy, Matplotlib, SciPy (for running the example notebooks)
 
 ## Contributing

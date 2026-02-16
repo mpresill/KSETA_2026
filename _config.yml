@@ -34,3 +34,10 @@ html:
 launch_buttons:
   notebook_interface: "jupyterlab"
   binderhub_url: "https://mybinder.org"
+
+# Sphinx configuration
+sphinx:
+  config:
+    html_theme_options:
+      repository_url: https://github.com/mpresill/KSETA_2026
+      use_repository_button: true
