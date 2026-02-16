@@ -1,0 +1,12 @@
+# Table of contents
+format: jb-book
+root: intro
+chapters:
+  - file: slides
+    title: Slides
+  - file: tutorial
+    title: Tutorial
+  - file: supplementary
+    title: Supplementary Material
+  - file: references
+    title: References
