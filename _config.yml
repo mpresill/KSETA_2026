@@ -1,9 +1,11 @@
 # Book settings
-title: KSETA 2026 Course
-author: KSETA PhD Course
+title: KSETA PhD Course 2026
+author: KSETA
+copyright: "2026"
 logo: ""
 
 # Force re-execution of notebooks on each build.
+# See https://jupyterbook.org/content/execute.html
 execute:
   execute_notebooks: auto
 
@@ -23,9 +25,15 @@ repository:
   branch: main
 
 # Add GitHub buttons to your book
+# See https://jupyterbook.org/customize/config.html#add-a-link-to-your-repository
 html:
   use_issues_button: true
   use_repository_button: true
+
+# Launch button settings
+launch_buttons:
+  notebook_interface: "jupyterlab"
+  binderhub_url: "https://mybinder.org"
 
 # Sphinx configuration
 sphinx:

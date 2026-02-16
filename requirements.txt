@@ -1,3 +1,4 @@
-jupyter-book<2
-sphinx~=7.0
-myst-parser
+jupyter-book>=0.15.0,<1.0.0
+matplotlib>=3.5.0
+numpy>=1.21.0
+scipy>=1.7.0
