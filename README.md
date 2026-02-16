@@ -52,5 +52,4 @@ To enable GitHub Pages:
 
 - `_config.yml`: Main Jupyter Book configuration
 - `_toc.yml`: Table of contents structure
-- `requirements.txt`: Python dependencies
- 
+- `requirements.txt`: Python dependencies 
