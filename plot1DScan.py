@@ -978,7 +978,7 @@ save_graph.GetXaxis().SetTitle('%s = %.3f %+.3f/%+.3f' %
                                (fixed_name, val_nom[0], val_nom[2], val_nom[1]))
 
 outdir = args.outdir
-if args.outdir is not '':
+if args.outdir != '':
     outdir = outdir + '/'
 outfile = ROOT.TFile(outdir + args.output + '.root', 'RECREATE')
 outfile.WriteTObject(save_graph, 'main')
