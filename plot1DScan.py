@@ -4,7 +4,8 @@ import ROOT
 import math
 from functools import partial
 from collections import OrderedDict
-import plotting as plot
+import importlib
+plot = importlib.import_module('plot-utils')
 import json
 import argparse
 import os.path

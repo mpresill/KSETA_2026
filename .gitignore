@@ -49,3 +49,4 @@ htmlcov/
 
 # MyST build outputs
 _build
+*.backup
