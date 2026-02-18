@@ -1,10 +1,11 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 import sys
 import ROOT
 import math
 from functools import partial
 from collections import OrderedDict
-import plotting as plot
+import importlib
+plot = importlib.import_module('plot-utils')
 import json
 import argparse
 import os.path
@@ -70,7 +71,7 @@ def ProcessEnvelope(main, others, relax_safety=0):
     for oth in others:
         gr = oth['graph']
         # gr.Print()
-        for i in xrange(gr.GetN()):
+        for i in range(gr.GetN()):
             x = gr.GetX()[i]
             y = gr.GetY()[i]
             if x not in vals:
@@ -106,10 +107,10 @@ def ProcessEnvelope(main, others, relax_safety=0):
     gr.SetPoint(len(vals), min_x, min_y)
     gr.Sort()
 
-    for i in xrange(gr.GetN()):
+    for i in range(gr.GetN()):
         gr.GetY()[i] -= min_y
     for oth in others:
-        for i in xrange(oth['graph'].GetN()):
+        for i in range(oth['graph'].GetN()):
             oth['graph'].GetY()[i] -= min_y
         # print 'OTHER'
         # oth['graph'].Print()
@@ -119,7 +120,7 @@ def ProcessEnvelope(main, others, relax_safety=0):
 
 
 def ProcessEnvelopeNew(main, others, relax_safety=0, chop=-1.):
-    print '[ProcessEnvelope] Will create envelope from %i other scans' % len(others)
+    print('[ProcessEnvelope] Will create envelope from %i other scans' % len(others))
     min_x = min([oth['graph'].GetX()[0] for oth in others])
     max_x = max([oth['graph'].GetX()[oth['graph'].GetN() - 1] for oth in others])
     # print '(min_x,max_x) = (%f, %f)' % (min_x, max_x)
@@ -128,7 +129,7 @@ def ProcessEnvelopeNew(main, others, relax_safety=0, chop=-1.):
     x = min_x
     xvals = []
     yvals = []
-    for i in xrange(npoints):
+    for i in range(npoints):
         yset = []
         for oth in others:
             gr = oth['graph']
@@ -142,7 +143,7 @@ def ProcessEnvelopeNew(main, others, relax_safety=0, chop=-1.):
 
     gr = ROOT.TGraph()
     gr.Set(len(xvals))  # will not contain the best fit
-    for i in xrange(gr.GetN()):
+    for i in range(gr.GetN()):
         gr.SetPoint(i, xvals[i], yvals[i])
 
     # print 'Envelope'
@@ -158,13 +159,13 @@ def ProcessEnvelopeNew(main, others, relax_safety=0, chop=-1.):
     gr.SetPoint(len(xvals), min_x, min_y)
     gr.Sort()
 
-    for i in xrange(gr.GetN()):
+    for i in range(gr.GetN()):
         gr.GetY()[i] -= min_y
     if chop > 0:
         plot.RemoveGraphYAbove(gr, chop)
 
     for oth in others:
-        for i in xrange(oth['graph'].GetN()):
+        for i in range(oth['graph'].GetN()):
             oth['graph'].GetY()[i] -= min_y
         if chop > 0:
             plot.RemoveGraphYAbove(oth['graph'], chop)
@@ -183,7 +184,7 @@ def BuildScan(scan, param, files, color, yvals, chop,
               remove_delta=None,
               improve=False,
               linestyle=1):
-    print files
+    print(files)
     if pregraph is None:
         remove_dups = not envelope
         graph = read(scan, param, files, chop, remove_near_min,
@@ -194,7 +195,7 @@ def BuildScan(scan, param, files, color, yvals, chop,
         graph = pregraph
 
     bestfit = None
-    for i in xrange(graph.GetN()):
+    for i in range(graph.GetN()):
         if graph.GetY()[i] == 0.:
             bestfit = graph.GetX()[i]
     if envelope:
@@ -336,9 +337,9 @@ if args.remove_x_ranges is not None:
     x_ranges = args.remove_x_ranges.split(':')
     REMOVE_X_RANGES = [(float(x.split(',')[0]), float(x.split(',')[1])) for x in x_ranges]
 
-print '--------------------------------------'
-print args.output
-print '--------------------------------------'
+print('--------------------------------------')
+print(args.output)
+print('--------------------------------------')
 
 fixed_name = args.POI
 if args.translate is not None:
@@ -374,15 +375,15 @@ n_env = len(args.others) if args.others is not None else 0
 if args.envelope and args.breakdown:
     n_brk = len(args.breakdown.split(','))
     n_env = len(args.others) / n_brk
-    print '>> Number of components in breakdown: %i' % n_brk
-    print '>> Number of components in envelope: %i' % n_env
+    print('>> Number of components in breakdown: %i' % n_brk)
+    print('>> Number of components in envelope: %i' % n_env)
 
 other_scans = []
 other_scans_opts = []
 if args.others is not None:
     for i, oargs in enumerate(args.others):
         splitargs = oargs.split(':')
-        print splitargs
+        print(splitargs)
         other_scans_opts.append(splitargs)
         other_POI = args.POI
         if len(splitargs) >= 4:
@@ -413,17 +414,17 @@ if args.others is not None:
             )
 
 if args.envelope and args.breakdown:
-    for i in xrange(n_env):
-        print '>> Correcting breakdown offsets for envelope index %i' % i
+    for i in range(n_env):
+        print('>> Correcting breakdown offsets for envelope index %i' % i)
         gr = other_scans[i]['graph'].Clone()
         plot.RemoveSmallDelta(gr, 1E-6)
         bf = other_scans[i+n_env]['val'][0]
         y_off = other_scans[i]['func'].Eval(bf)
-        print'>> Evaluating for offset at best-fit of %f gives %f' % (bf, y_off)
-        for j in xrange(1, n_brk):
+        print('>> Evaluating for offset at best-fit of %f gives %f' % (bf, y_off))
+        for j in range(1, n_brk):
             oth = other_scans[i+j*n_env]
             # oth['graph'].Print()
-            print '>> Applying shift of %f to graph %s' % (y_off, other_scans_opts[i+j*n_env][0])
+            print('>> Applying shift of %f to graph %s' % (y_off, other_scans_opts[i+j*n_env][0]))
             plot.ApplyGraphYOffset(oth['graph'], y_off)
             # oth['graph'].Print()
             color = oth['func'].GetLineColor()
@@ -434,7 +435,7 @@ if args.envelope and args.breakdown:
             oth['func'].SetLineColor(color)
             NAMECOUNTER += 1
     new_others = []
-    for j in xrange(n_brk):
+    for j in range(n_brk):
         if args.old_envelope:
             new_gr = ProcessEnvelope(main_scan, other_scans[n_env*j:n_env*(j+1)], args.relax_safety)
         else:
@@ -641,7 +642,7 @@ if args.breakdown is None and args.envelope is False:
         textfit = '#color[%s]{%s = %.3f{}^{#plus %.3f}_{#minus %.3f}}' % (
             other_scans_opts[i][2], fixed_name, other['val'][0], other['val'][1], abs(other['val'][2]))
         if args.upper_cl:
-            print 'here'
+            print('here')
             textfit = '#color[%s]{%s < %.2f (%i%% CL)}' % (
                 other_scans_opts[i][2], fixed_name, other['val'][1], int(args.upper_cl * 100))
         pt.AddText(textfit)
@@ -665,12 +666,12 @@ if args.breakdown is not None:
     for i, br in enumerate(breakdown):
         if i < (len(breakdown) - 1):
             if (abs(v_hi[i + 1]) > abs(v_hi[i])):
-                print 'ERROR SUBTRACTION IS NEGATIVE FOR %s HI' % br
+                print('ERROR SUBTRACTION IS NEGATIVE FOR %s HI' % br)
                 hi = 0.
             else:
                 hi = math.sqrt(v_hi[i] * v_hi[i] - v_hi[i + 1] * v_hi[i + 1])
             if (abs(v_lo[i + 1]) > abs(v_lo[i])):
-                print 'ERROR SUBTRACTION IS NEGATIVE FOR %s LO' % br
+                print('ERROR SUBTRACTION IS NEGATIVE FOR %s LO' % br)
                 lo = 0.
             else:
                 lo = math.sqrt(v_lo[i] * v_lo[i] - v_lo[i + 1] * v_lo[i + 1])
@@ -705,9 +706,9 @@ signif_y = None
 arrow_list = []
 if args.signif:
     gr = main_scan['graph']
-    for i in xrange(gr.GetN()):
+    for i in range(gr.GetN()):
         if abs(gr.GetX()[i] - 0.) < 1E-4:
-            print 'Found scan point at %s = %.6f' % (args.POI, gr.GetX()[i])
+            print('Found scan point at %s = %.6f' % (args.POI, gr.GetX()[i]))
             pt.SetY1(pt.GetY1() - 0.1)
             pt.SetX1(0.52)
             signif = ROOT.Math.normal_quantile_c(
@@ -722,14 +723,14 @@ if args.signif:
             pt.AddText(txt_signif)
     signif = ROOT.Math.normal_quantile_c(
                 ROOT.Math.chisquared_cdf_c(main_scan['func'].Eval(1.0), 1) / 2., 1)
-    print '-2#DeltalnL @ %s = %.1f is %.3f, signif = %.2fsigma' % (fixed_name, 1., main_scan['func'].Eval(1.0), signif)
+    print('-2#DeltalnL @ %s = %.1f is %.3f, signif = %.2fsigma' % (fixed_name, 1., main_scan['func'].Eval(1.0), signif))
 
     if args.decorate_signif:
         for i, other in enumerate(other_scans):
             gr = other['graph']
-            for p in xrange(gr.GetN()):
+            for p in range(gr.GetN()):
                 if abs(gr.GetX()[p] - 0.) < 1E-4:
-                    print 'Found scan point at %s = %.6f' % (args.POI, gr.GetX()[p])
+                    print('Found scan point at %s = %.6f' % (args.POI, gr.GetX()[p]))
                     arrow_list.append((other['func'].GetLineColor(), ROOT.Math.normal_quantile_c(
                         ROOT.Math.chisquared_cdf_c(gr.GetY()[p], 1) / 2., 1)))
                     break
@@ -744,7 +745,7 @@ if args.signif:
         latex.SetTextAlign(12)
         for col, sig in arrow_list:
             latex.SetTextColor(col)
-            print sig
+            print(sig)
             if sig > 0.0:
                 # latex.DrawLatex(x_align_label, sig*sig+1.0, '%.1f#sigma' % sig)
                 latex.DrawLatex(x_align_label, sig*sig+1.5, '%.1f#sigma' % sig)
@@ -801,8 +802,8 @@ if args.json is not None:
     if args.breakdown is not None:
         js[args.model][args.POI].update(breakdown_json)
     if args.envelope is not None:
-        print main_scan['other_1sig']
-        print main_scan['other_2sig']
+        print(main_scan['other_1sig'])
+        print(main_scan['other_2sig'])
         js_extra = {
             'OtherLimitLo': 0.,
             'OtherLimitHi': 0.,
@@ -964,7 +965,7 @@ legend.AddEntry(main_scan['func'], args.main_label, 'L')
 if args.legend_pos == 10 and len(other_scans) > 2:
     legend.AddEntry(main_scan['func'], ' ', '')
 if args.breakdown and args.envelope:
-    for i in xrange(n_env):
+    for i in range(n_env):
         legend.AddEntry(new_others[i]['func'], other_scans_opts[i][1], 'L')
 else:
     for i, other in enumerate(other_scans):
