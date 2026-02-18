@@ -742,7 +742,7 @@ def LimitTGraphFromJSONFile(jsfile, label):
 def ToyTGraphFromJSON(js, label):
     xvals = []
     yvals = []
-    if isinstance(label,types.StringTypes):
+    if isinstance(label, str):
         for entry in js[label]:
             xvals.append(float(entry))
             yvals.append(1.0)
