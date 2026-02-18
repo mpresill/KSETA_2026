@@ -1,15 +1,11 @@
-# Slides
+---
+marp: true
+---
 
-Course presentation slides will be available here.
+# KSETA 2026 Slides
 
-## Lecture Slides
+## Lecture Resources
 
-Slides will be uploaded and linked below:
-
-<!-- Add your slide links here once uploaded -->
-<!-- Example format:
-- [Lecture 1: Introduction to EFT](path/to/lecture1.pdf)
-- [Lecture 2: Applications](path/to/lecture2.pdf)
--->
-
-*Slides will be added as the course progresses.*
+- [Lecture 1: Introduction to EFT](https://yourwebpage.com/lecture1)
+- [Lecture 2: Applications](https://yourwebpage.com/lecture2)
+- [Lecture 3: Advanced Topics](https://yourwebpage.com/lecture3)
