@@ -40,9 +40,10 @@ https://levelup.gitconnected.com/docker-on-apple-silicon-mac-how-to-run-x86-cont
 To download and run the docker image:
 
 ```sh
-docker run --cap-add SYS_ADMIN --device /dev/fuse -it gitlab-registry.cern.ch/agilbert/eft-exercise-docker:snapshot /bin/bash
+docker run --cap-add SYS_ADMIN --device /dev/fuse -it ADD MY IMAGE /bin/bash
 ```
 
+<!--
 The software needed for the exercise is already installed in the image, within the `EFT-HandsOn` directory. To make sure you have the latest version of the software:
 
 ```sh
@@ -322,3 +323,5 @@ OI} --model eft --json eft_scans.json --no-input-label --chop 100 --y-max 30 --r
 Tasks:
  - It is useful to compare the constraints with and without the inclusion of the terms quadratic in the Wilson coefficients. Ideally, we would be in a situation where our limits do not change significantly between these two cases, as it could imply we would not be sensitive to possible missing contributions at Lambda^-2 order. What is the situation here?
  - In the linear-only case, try performing a "principal component analysis" (see the slides for details). This involves constructing what's called the Fisher information matrix. We start with the covariance matrix (C), which we invert, and then we apply the linear transformation matrix (P) from both sides: P^T C^-1 P, where P is the Nbins * Nparams matrix of the A_i values. From the resulting matrix you can perform an eigenvalue decomposition, which identifies the linear combinations of Wilson coefficients that can be constrained the strongest.
+
+ -->
