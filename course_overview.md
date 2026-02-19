@@ -29,14 +29,14 @@ The course is divided into three modules:
 - Properties of a famous HEP EFT models: SMEFT, HEFT, and anomalous quartic gauge couplings
 - Validity of the EFT, perturbative unitarity
 
-#### Module 2: Experimental Measurements
+#### Module 2: Applications - experimental measurements 
 - Refresher: collider physics and data analysis for new physics phenomena 
 - EFT approach in LHC searches:
 - General comments on the experimental approach for EFT searches
 - DIM-6: top quark couplings measurements in EFT approach
 - Dim-8: EW physics prototype in VBS measurements 
 
-#### Module 3: Statistical approaches
+#### Module 3: Advanced topics
 - Statistical methods commonly used
 - Dealing with many degrees of freedom: PCA 
 - ML based inference
@@ -44,10 +44,10 @@ The course is divided into three modules:
 #### Hand-on session
 - MC simulation with Madgraph
 - Reinterpretation of Run 2 measurement in Rivet
-- Statistical analysis
+- Quick statistical analysis
 
 ### Additional Resources
 
 - Reference materials and papers
-- Online resources and tutorials
-- Software tools and libraries
+- Online resources and tutorials: [All the things EFT](https://www.youtube.com/channel/UC1_KF6kdJFoDEcLgpcegwCQ), [PhD course at Valencia by A. Pich](https://www.youtube.com/watch?v=X-V_PCfLe0I)
+- Software tools and libraries: [Madgraph launchapd](https://launchpad.net/mg5amcnlo), [Rivet](https://rivet.hepforge.org), [Roofit basics](https://github.com/amarini/Prefit2020/tree/master)
