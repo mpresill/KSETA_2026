@@ -4,10 +4,10 @@
 format: jb-book
 root: intro
 chapters:
-  - file: notebooks/01_introduction_to_eft
-    title: Introduction to EFT
-  - file: notebooks/02_experimental_measurements
-    title: Experimental Measurements
+#  - file: notebooks/01_introduction_to_eft
+#    title: Introduction to EFT
+#  - file: notebooks/02_experimental_measurements
+#    title: Experimental Measurements
   - file: slides
     title: Slides
   - file: tutorial
