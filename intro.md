@@ -19,24 +19,28 @@ By the end of this course, students will:
 - Tuesday 03/03 morning 9-11
 - Wednesday 04/03, afternoon 13:30-16:45
 
+### Prerequisites:
+- Python (c++ basics), or at least some minimal knowledge of any computing language 
+- #### bring your laptop for the Wednesday lecture, and check that you can either access CERN lxplus machines or install Docker container
+
 ### Course Structure
 
 The course is divided into three modules:
 
-#### Module 1: Introduction to Effective Field Theory approach 
+#### Block 1: Introduction to Effective Field Theory approach 
 - General aspects of an effective theory approach
 - Examples: Rayleigh scattering, Fermi theory 
 - Properties of a famous HEP EFT models: SMEFT, HEFT, and anomalous quartic gauge couplings
 - Validity of the EFT, perturbative unitarity
 
-#### Module 2: Experimental Measurements
+#### Block 2: Applications - experimental measurements 
 - Refresher: collider physics and data analysis for new physics phenomena 
 - EFT approach in LHC searches:
 - General comments on the experimental approach for EFT searches
 - DIM-6: top quark couplings measurements in EFT approach
 - Dim-8: EW physics prototype in VBS measurements 
 
-#### Module 3: Statistical approaches
+#### Block 3: Advanced topics (Bonus - if time permits)
 - Statistical methods commonly used
 - Dealing with many degrees of freedom: PCA 
 - ML based inference
@@ -44,8 +48,4 @@ The course is divided into three modules:
 #### Hand-on session
 - MC simulation with Madgraph
 - Reinterpretation of Run 2 measurement in Rivet
-- Statistical analysis
-
-### Additional Resources
-- Reference materials and papers
-- Online resources and tutorials
+- Quick statistical analysis
