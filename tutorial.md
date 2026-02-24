@@ -37,11 +37,16 @@ Once installed, you should have the `docker` command available from the command 
 > Note, if using a new Mac with Apple Silicon, you may get better performance from enabling:
 https://levelup.gitconnected.com/docker-on-apple-silicon-mac-how-to-run-x86-containers-with-rosetta-2-4a679913a0d5
 
-To download and run the docker image:
+To download and run the docker image I have prepared for the course:
 
 ```sh
-docker run --cap-add SYS_ADMIN --device /dev/fuse -it ADD MY IMAGE /bin/bash
+docker run --rm -it --device /dev/fuse --cap-add SYS_ADMIN \
+  -e CVMFS_MOUNTS="cms.cern.ch sft.cern.ch" \
+  mpresill/cms-cvmfs-docker:kseta2026
 ```
+
+It is based on alma9 CERN lxplus, with cvmfs mounted. Once you have run it, please check the you can actually do `ls /cvmfs/cms.cern.ch/ ` and `scram list`.
+
 
 <!--
 The software needed for the exercise is already installed in the image, within the `EFT-HandsOn` directory. To make sure you have the latest version of the software:
