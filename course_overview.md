@@ -20,9 +20,8 @@ By the end of this course, students will:
 - Wednesday 04/03, afternoon 13:30-16:45
 
 ### Prerequisites:
-
 - Python (c++ basics), or at least some minimal knowledge of any computing language 
-- #### bring your laptop for the Wednesday lecture, and check the Hands-on session page
+- #### bring your laptop for the Wednesday lecture, and check that you can either access CERN lxplus machines or install Docker container
 
 ### Course Structure
 
