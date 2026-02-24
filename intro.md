@@ -21,7 +21,7 @@ By the end of this course, students will:
 
 ### Prerequisites:
 - Python (c++ basics), or at least some minimal knowledge of any computing language 
-- #### bring your laptop for the Wednesday lecture, and check that you can either access CERN lxplus machines or install Docker container
+- <ins>Bring your laptop for the Wednesday lecture, and check that you can either access CERN lxplus machines or install Docker container (see [here](https://mpresill.github.io/KSETA_2026/tutorial.html#hands-on-eft-exercise)) - otherwise contact me during the first lecture and we'll find out an alternative<ins>
 
 ### Course Structure
 
