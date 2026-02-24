@@ -41,7 +41,7 @@ The course is divided into three modules:
 - DIM-6: top quark couplings measurements in EFT approach
 - Dim-8: EW physics prototype in VBS measurements 
 
-#### Block 3: Advanced topics
+#### Block 3: Advanced topics (Bonus - if time permits)
 - Statistical methods commonly used
 - Dealing with many degrees of freedom: PCA 
 - ML based inference
