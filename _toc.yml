@@ -14,7 +14,5 @@ chapters:
     title: Tutorial
   - file: supplementary
     title: Supplementary Material
-  - file: slides_eft_gen_lpc2025
-    title: "EFT Event Generation (LPC 2025)"
   - file: references
     title: References
