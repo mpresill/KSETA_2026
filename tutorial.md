@@ -5,21 +5,6 @@ This section contains the hands-on tutorial materials for the course.
 ## Tutorial Overview
 
 The tutorial will cover practical applications of EFT in experimental measurements.
-
-## Tutorial Materials
-
-<!-- Add your tutorial materials here -->
-<!-- Example format:
-- [Tutorial 1: Getting Started](tutorials/tutorial1.ipynb)
-- [Tutorial 2: Advanced Topics](tutorials/tutorial2.ipynb)
--->
-
-*Tutorial materials will be added here.*
-
-## Prerequisites
-
-# Hands-on EFT exercise
-
 The goals of this exercise are to gain experience with event simulation, the parameterisation of effective field theory (EFT) deviations on SM cross sections, and some of the aspects of setting EFT constraints in data analysis.
 
 ## Software environment
@@ -48,60 +33,52 @@ docker run --rm -it --device /dev/fuse --cap-add SYS_ADMIN \
 If you get an error on your Silicon Mac, try adding the flag `--platform linux/amd64`.
 It is based on alma9 CERN lxplus, with cvmfs mounted. Once you have run it, please check the you can actually do `ls /cvmfs/cms.cern.ch/ ` and `scram list`.
 
+---
+# Beginning of the hands-on session
 
-<!--
-The software needed for the exercise is already installed in the image, within the `EFT-HandsOn` directory. To make sure you have the latest version of the software:
-
-```sh
-cd EFT-HandsOn
-git pull
-```
+The main codes needed for the exercise is already included in the image, within the `workdir` directory. 
 
 To finish setting up the software environment:
 
 ```sh
-source setup.sh
+. /cvmfs/sft.cern.ch/lcg/views/LCG_106/x86_64-el9-gcc13-opt/setup.sh
+cd workdir
+git clone https://github.com/mpresill/EFT2Obs.git
 ```
 
-Instructions for setting up the software on lxplus are given below.
-
-### lxplus
-
-First clone this repository somewhere:
-
-```sh
-git clone https://github.com/ajgilbert/EFT-HandsOn.git
-cd EFT-HandsOn
-```
-
-Inside the `EFT-HandsOn` directory we will install the software needed for this exercise. The main tool we will use is **EFT2Obs**, which will itself install the **Madgraph5_aMC@NLO** Monte Carlo event generator, and the **RIVET** framework for defining analysis selections and observables.
+He we will install the software needed for this exercise. The main tool we will use is **EFT2Obs**, which will itself install the **Madgraph5_aMC@NLO** Monte Carlo event generator, and the **RIVET** framework for defining analysis selections and observables.
 
 To download **EFT2Obs** and complete the installation, run
 
 ```sh
-./setup.sh
+cd EFT2Obs 
+source env.sh
+./scripts/setup_mg5.sh
+./scripts/setup_rivet.sh
 ```
 
-Note that to make sure everyone has a consistent software environment, this script will also checkout a CMSSW release (CMSSW_11_3_4).
-Once the installation is complete, we will source the `setup.sh` script to set all the environment variables correctly. Note that you will need to run this in every new session:
+Note that to make sure everyone has a consistent software environment.
+Once the installation is complete, we will source the `setup.sh` script to set all the environment variables correctly. 
 
+Note that you will need to run this in every new session:
 ```sh
 source setup.sh
 ```
 
 ## Install the SMEFTsim models
 
-First we will work with the EFT2Obs package. A script is provided to download and install the SMEFTsim UFO models. These will be installed in the `MG5_aMC_v2_6_7/models` directory:
+First we will work with the EFT2Obs package. A script is provided to download and install the SMEFTsim UFO models. 
+These will be installed in the `MG5_aMC_v2_9_16/models` directory:
 
 ```sh
-cd EFT-HandsOn/EFT2Obs
 ./scripts/setup_model_SMEFTsim3.sh
 ```
 
 If we now look inside the Madgraph `models` directory, we'll see the different variants of the SMEFTsim model:
 
 ```sh
-ls -1 MG5_aMC_v2_6_7/models/
+ls -1 MG5_aMC_v2_9_16/models/
+[...]
 SMEFTsim_MFV_MwScheme_UFO
 SMEFTsim_MFV_alphaScheme_UFO
 SMEFTsim_U35_MwScheme_UFO
@@ -118,7 +95,7 @@ SMEFTsim_top_alphaScheme_UFO
 Let's look inside one of the models:
 
 ```
-cd MG5_aMC_v2_6_7/models/SMEFTsim_topU3l_MwScheme_UFO/
+cd MG5_aMC_v2_9_16/models/SMEFTsim_topU3l_MwScheme_UFO/
 ls
 ```
 You should see a few files that start `restrict_[...].dat`. These predefine values for all the parameters of the model, and can be used when importing the model to generate a process. Of relevance for us are the values of the SMEFT parameters:
@@ -142,8 +119,12 @@ So if we wanted to include all possible SMEFT effects we could use the `restrict
 A restrict file that limits us to these operators is in the EFT-HandsOn directory, so we can copy it into the model directory:
 
 ```sh
-cp ../../../../restrict_massless_HVV.dat ./
+cp ../../../../restrict_massless_HVV.dat .
 ```
+
+## Digression on Madgraph MC generation at LO
+
+See the dedicated supplementary material [page](https://mpresill.github.io/KSETA_2026/supplementary.html).
 
 ## Generate a process
 
@@ -175,7 +156,7 @@ We can run this card with Madgraph to generate the process:
 ```sh
 ./scripts/setup_process.sh Higgs-VBF
 ```
-All the generated code to evaluate the matrix element for this process will be in `MG5_aMC_v2_6_7/Higgs-VBF`. Inside the directory you can find plots of all the generated diagrams: `MG5_aMC_v2_6_7/Higgs-VBF/SubProcesses/P1_qq_hqq_h_llvlvl/*.jpg`.
+All the generated code to evaluate the matrix element for this process will be in `MG5_aMC_v2_9_16/Higgs-VBF`. Inside the directory you can find plots of all the generated diagrams: `MG5_aMC_v2_9_16/Higgs-VBF/SubProcesses/P1_qq_hqq_h_llvlvl/*.jpg`.
 
 ## Set up the other cards
 
@@ -199,7 +180,7 @@ python scripts/auto_detect_operators.py -p Higgs-VBF
 >> Final relevant parameters: ['cHB', 'cHDD', 'cHW', 'cHWB', 'cHbox']
 >> Making config json
 python scripts/make_config.py -p Higgs-VBF -o cards/Higgs-VBF/config.json --pars SMEFT:4,5,7,8,9  --def-val 0.01 --def-sm 0.0 --def-gen 0.0
->> Parsing MG5_aMC_v2_6_7/Higgs-VBF/Cards/param_card.dat to get the list of model parameters
+>> Parsing MG5_aMC_v2_9_16/Higgs-VBF/Cards/param_card.dat to get the list of model parameters
 >> Selecting 5/5 parameters in block SMEFT:
     - [4] chbox
     - [5] chdd
@@ -330,4 +311,4 @@ Tasks:
  - It is useful to compare the constraints with and without the inclusion of the terms quadratic in the Wilson coefficients. Ideally, we would be in a situation where our limits do not change significantly between these two cases, as it could imply we would not be sensitive to possible missing contributions at Lambda^-2 order. What is the situation here?
  - In the linear-only case, try performing a "principal component analysis" (see the slides for details). This involves constructing what's called the Fisher information matrix. We start with the covariance matrix (C), which we invert, and then we apply the linear transformation matrix (P) from both sides: P^T C^-1 P, where P is the Nbins * Nparams matrix of the A_i values. From the resulting matrix you can perform an eigenvalue decomposition, which identifies the linear combinations of Wilson coefficients that can be constrained the strongest.
 
- -->
+
