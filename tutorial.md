@@ -156,6 +156,58 @@ We can run this card with Madgraph to generate the process:
 ```sh
 ./scripts/setup_process.sh Higgs-VBF
 ```
+MadGraph reads this and generates all the matrix element code ina self-contained directory for the process in exam. The output lands in MG5_aMC_v2_9_16/Higgs-VBF/, including Feynman diagrams in .jpg format, Fortran/Python source code for the matrix element, etc. 
+Here is what that directory looks like and what each part means:
+```
+MG5_aMC_v2_9_16/Higgs-VBF/
+│
+├── Cards/                        ← All configuration cards for this process
+│   ├── proc_card.dat             ← Copy of your input process card
+│   ├── run_card.dat              ← Default run settings (energy, cuts, nevents, etc.)
+│   ├── param_card.dat            ← All model parameters (SM + SMEFT Wilson coefficients)
+│   ├── pythia8_card_default.dat  ← Default Pythia8 showering settings
+│   └── reweight_card.dat         ← (later filled) EFT reweighting points
+│
+├── SubProcesses/                 ← The core: one sub-directory per helicity/partonic subprocess
+│   └── P1_qq_hqq_h_llvlvl/      ← The actual subprocess (e.g. ud → h u d → h e μ νν)
+│       ├── matrix1.f             ← Fortran code: the actual matrix element |M|² computation (using DHELAS routines)
+│       ├── nexternal.inc         ← Fortran include: number of external particles
+│       ├── pmass.inc             ← Fortran include: particle masses
+│       ├── coupl.inc             ← Fortran include: coupling constants used in this subprocess
+│       ├── configs.inc           ← Fortran include: list of Feynman diagram configurations
+│       ├── props.inc             ← Fortran include: propagator definitions
+│       ├── *.ps                  ← PostScript files of Feynman diagrams (one per diagram)
+│       └── *.jpg                 ← JPEG images of those Feynman diagrams (one per diagram)
+│
+├── Source/                       ← Shared Fortran source libraries
+│   ├── MODEL/                    ← Model-specific code: couplings, particle masses
+│   │   ├── couplings.f           ← Fortran: how couplings are computed from param_card
+│   │   ├── parameters.py         ← Python version of the same
+│   │   └── ...
+│   ├── DHELAS/                   ← HELAS library: helicity amplitude routines
+│   │   └── *.f                   ← Fortran routines for spinor/vector products
+│   ├── PDF/                      ← Parton distribution function interface
+│   └── ...
+│
+├── bin/                          ← MadGraph executable scripts for this process
+│   ├── madevent                  ← Main script to generate LHE events
+│   └── internal/                 ← Internal Python helper scripts
+│
+├── Events/                       ← Output directory for generated event files
+│   └── (filled later, after event generation)
+│
+├── HTML/                         ← Web-viewable summary of generated diagrams & process info
+│   └── index.html                ← Human-readable overview of the process
+│
+├── madevent.tar.gz               ← Compressed archive of the full process (used for gridpack)
+└── proc_characteristics          ← Text file: summary of process properties
+```
+
+This is the heart of what MadGraph generates. The name encodes the partonic subprocess.
+- `matrix1.f` — the Fortran subroutine that numerically evaluates the matrix element squared |M|² for a given set of 4-momenta and helicities. This is what ultimately gets called billions of times during Monte Carlo integration.
+- `coupl.inc` — lists all the coupling constants that appear in the amplitude for this subprocess. This is also what EFT2Obs's auto_detect_operators.py script reads (as you can see in the code) to find which SMEFT operators are relevant:
+
+
 All the generated code to evaluate the matrix element for this process will be in `MG5_aMC_v2_9_16/Higgs-VBF`. Inside the directory you can find plots of all the generated diagrams: `MG5_aMC_v2_9_16/Higgs-VBF/SubProcesses/P1_qq_hqq_h_llvlvl/*.jpg`.
 
 ## Set up the other cards
@@ -197,6 +249,12 @@ Have a look at these files and make sure you understand the contents. The last p
 python scripts/make_param_card.py -p Higgs-VBF -c cards/Higgs-VBF/config.json -o cards/Higgs-VBF/param_card.dat
 ```
 
+If you are running within the Docker, you need to apply this little patch:
+```sh
+sed -i 's/nb_core = .*/nb_core = 1/' /workdir/EFT2Obs/MG5_aMC_v2_9_16/input/mg5_configuration.txt
+```
+
+
 Now we can make the gridpack:
 ```sh
 ./scripts/make_gridpack.sh Higgs-VBF
@@ -205,9 +263,16 @@ From this we could generate some events, but unfortunately we don't have anythin
 
 ## RIVET
 
-[RIVET](https://rivet.hepforge.org) is a C++ framework for defining generator-level event selections and observables. We define a class deriving from `Rivet::Analysis`, which we compile to produce a kind of plug-in module that we can use when running the RIVET program on our PYTHIA-showered events. The RIVET installation already contains a [large catalogue](https://rivet.hepforge.org/analyses.html) of analyses. In EFT2Obs we store additional ones in the `RivetPlugins` directory. The code there is compiled by running `./scripts/setup_rivet_plugins.sh`.
+[RIVET](https://rivet.hepforge.org) is a C++ framework for defining generator-level event selections and observables. We define a class deriving from `Rivet::Analysis`, which we compile to produce a kind of plug-in module that we can use when running the RIVET program on our PYTHIA-showered events. The RIVET installation already contains a [large catalogue](https://rivet.hepforge.org/analyses.html) of analyses. In EFT2Obs we store additional ones in the `RivetPlugins` directory. 
+The code there is compiled by running 
 
-A basic RIVET analysis is included in this repository: `HiggsVBF.cc`. Copy this into `EFT2Obs/RivetPlugins`, and run the script above to compile it. Have a look through the code. It applies a basic selection requiring two charged leptons and two jets. A histogram of the Higgs candidate pT is filled. Note how histograms are first added as data members of the class, and that in the `init()` function we have to call the `book(histogram, label, nbins, min, max)` to define the actual properties. The histogram is then filled in the `analyze` function, and the normalization adjusted via the `scale` function in `finalize()`, which runs after all events have been processed. 
+```sh
+. /cvmfs/sft.cern.ch/lcg/views/LCG_106/x86_64-el9-gcc13-opt/setup.sh
+source env.sh
+./scripts/setup_rivet_plugins.sh 
+```
+
+A basic RIVET analysis is included in the `workdir` folder: `HiggsVBF.cc`. Copy this into `EFT2Obs/RivetPlugins`, and run the script above to compile it. Have a look through the code. It applies a basic selection requiring two charged leptons and two jets. A histogram of the Higgs candidate pT is filled. Note how histograms are first added as data members of the class, and that in the `init()` function we have to call the `book(histogram, label, nbins, min, max)` to define the actual properties. The histogram is then filled in the `analyze` function, and the normalization adjusted via the `scale` function in `finalize()`, which runs after all events have been processed. 
 
 This code hides one of the powerful features of RIVET: under the hood, an instance of the histogram is automatically created and filled for every event weight RIVET encounters in the input. This is exactly what we need - we can extract the EFT scaling from the set of histograms created for each reweighting point.
 
@@ -225,7 +290,8 @@ where
 
  When the script finishes, the output histograms will be in the `test-Higgs-VBF/Rivet_1.yoda` file. The are written in a human-readable format called [YODA](https://yoda.hepforge.org). Note that the intermediate LHE and HepMC files are not saved (the latter can be quite large), but `run_gridpack.py` has options to save/load these if needed.
 
- ### Parallel running
+<!--
+ ### Parallel running (not needed)
 
  If you need to increase the number of events in the output then we can use the `launch_jobs.py` helper script to call `run_gridpack.py` in parallel:
 
@@ -233,6 +299,7 @@ where
  python scripts/launch_jobs.py --gridpack gridpack_Higgs-VBF.tar.gz -j 4 -s 1 -e 20000 -p HiggsVBF -o test-Higgs-VBF --job-mode interactive --parallel 4
  ```
  Here we run four jobs (`-j 4`) - the random number seeds will start consecutively from 1. The four output files can be merged into one yoda file with: `yodamerge Rivet_* -o Rivet.yoda`. 
+-->
 
  ## Extracting the scaling functions and plotting
 
@@ -270,17 +337,18 @@ python scripts/makePlot.py --hist HiggsVBF_HiggsPt.json -c cards/Higgs-VBF/confi
 The `--draw` options supports multiple arguments of the form: `[param1]=[val1],[param2]=[val2],..[paramN]=[valN]:[ROOT color code]`.
 
 
-![Example scaling](./HiggsVBF_HiggsPt.png)
-
 **Tasks:**
 
- - The options `--no-square --no-cross` can be added to the plotting script to ignore the ci^2 or ci*cj terms respectively. In this way the interference-only effects can be isolated. Add the other operators to this plot (some tuning of the coefficient values will be needed), and see how much of a difference there is when the quadratic terms are suppressed.
- - Add some additional observables to the RIVET analysis. See if you can find some distributions that could have different/stronger constraining power on the operators in question. Angles involving the two jets may be of interest.
- - [Optional] regenerate the process including all possible operators this time.
+-**The options `--no-square --no-cross` can be added to the plotting script to ignore the ci^2 or ci*cj terms respectively. In this way the interference-only effects can be isolated. Add the other operators to this plot (some tuning of the coefficient values will be needed), and see how much of a difference there is when the quadratic terms are suppressed.**
+
+- **Add some additional observables to the RIVET analysis. See if you can find some distributions that could have different/stronger constraining power on the operators in question. Angles involving the two jets may be of interest.**
+   
+- **[Optional] regenerate the process including all possible operators this time.**
+
 
 ## EFT fits
 
-Once a good observable has been identified, we can move on to performing fits. In this section we will work mostly with the script `eftfit.py`. Have a look through the script, which has comments explaining each step.
+Once a good observable has been identified, we can move on to performing fits. In this section we will work mostly with the script `eftfit.py` available in `workdri`. Have a look through the script, which has comments explaining each step.
 
 Before we actually do any fitting, we have to approximate a measurement of the distribution. While normally we would do this by generating signal and background events, applying detector simulation, and building a full statistical model, in this exercise we will take some shortcuts. 
 
@@ -294,7 +362,9 @@ At this point, we can construct the multivariate Gaussian PDF, and build the neg
 
 *Try changing the data RooRealVars to different values, and verify that non-zero values of the coefficients are returned in the fit.*
 
-The `RunFits` function also has an option to perform likelihood scans, which can be used to extract precise confidence intervals (in the asymptotic approximation). The fits can run in two possible configurations: one with all parameters floating freely, in which during a scan for one parameter we say the others are "profiled"; and one where only one parameter at a time is floating, and all others are fixed to zero. How do the uncertainties compare in the two cases?
+The `RunFits` function also has an option to perform likelihood scans, which can be used to extract precise confidence intervals (in the asymptotic approximation). The fits can run in two possible configurations: one with all parameters floating freely, in which during a scan for one parameter we say the others are "profiled"; and one where only one parameter at a time is floating, and all others are fixed to zero. 
+
+- **How do the uncertainties compare in the two cases?**
 
 In general we would prefer to have all parameters floating, as the resulting constraints will be the most generic. In practice this does not always work, because of the presence of flat direction in the likelihood (i.e. two parameters, or two linear combinations of parameters, that correspond to the same degree of freedom).
 
@@ -311,4 +381,10 @@ Tasks:
  - It is useful to compare the constraints with and without the inclusion of the terms quadratic in the Wilson coefficients. Ideally, we would be in a situation where our limits do not change significantly between these two cases, as it could imply we would not be sensitive to possible missing contributions at Lambda^-2 order. What is the situation here?
  - In the linear-only case, try performing a "principal component analysis" (see the slides for details). This involves constructing what's called the Fisher information matrix. We start with the covariance matrix (C), which we invert, and then we apply the linear transformation matrix (P) from both sides: P^T C^-1 P, where P is the Nbins * Nparams matrix of the A_i values. From the resulting matrix you can perform an eigenvalue decomposition, which identifies the linear combinations of Wilson coefficients that can be constrained the strongest.
 
+>Helper:
+>
+>To copy impages outside of the Docker: just open another terminal and do
+>```sh
+>docker cp f1f5a1daad14:/tmp/EFT2Obs/HiggsVBF_HiggsPt.png ~/Desktop/.
+>```
 
