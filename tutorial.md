@@ -45,6 +45,7 @@ docker run --rm -it --device /dev/fuse --cap-add SYS_ADMIN \
   mpresill/cms-cvmfs-docker:kseta2026
 ```
 
+If you get an error on your Silicon Mac, try adding the flag `--platform linux/amd64`.
 It is based on alma9 CERN lxplus, with cvmfs mounted. Once you have run it, please check the you can actually do `ls /cvmfs/cms.cern.ch/ ` and `scram list`.
 
 
