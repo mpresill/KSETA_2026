@@ -306,7 +306,7 @@ where
 A script `get_scaling.py` is used to extract the EFT scaling from the yoda file:
 
 ```sh
-python scripts/get_scaling.py -c cards/Higgs-VBF/config.json -i test-Higgs-VBF/Rivet.yoda --hist "/HiggsVBF/HiggsPt"
+python scripts/get_scaling.py -c cards/Higgs-VBF/config.json -i test-Higgs-VBF/Rivet_1.yoda --hist "/HiggsVBF/HiggsPt"
 ```
 
 We have to give it the config file so it can infer which operators and Wilson coefficient values each reweight point corresponds to. The histogram name is a string in the form `/[Analysis name]/[Histogram name]`. The coefficients for each bin are printed to the screen:
