@@ -29,21 +29,21 @@ The course is divided into three modules:
 
 #### Block 1: Introduction to Effective Field Theory approach 
 - General aspects of an effective theory approach
-- Examples: Rayleigh scattering, Fermi theory 
+- Examples: Rayleigh scattering, Fermi theory, See-Saw
 - Properties of a famous HEP EFT models: SMEFT, HEFT, and anomalous quartic gauge couplings
 - Validity of the EFT, perturbative unitarity
 
 #### Block 2: Applications - experimental measurements 
-- Refresher: collider physics and data analysis for new physics phenomena 
-- EFT approach in LHC searches:
-- General comments on the experimental approach for EFT searches
-- DIM-6: top quark couplings measurements in EFT approach
-- Dim-8: EW physics prototype in VBS measurements 
+- Refresher: collider physics and data analysis for new physics phenomena
+- How to build experimental observables in the EFT way
+- Basics of the statistical inference for EFT measurements 
+- Direct measurement vs. interpretation 
+- A few examples (at dim-5, dim-6 with "interference resurrection", dim-8)
 
 #### Block 3: Advanced topics (Bonus - if time permits)
-- Statistical methods commonly used
+- Wilk's theorem limitations
 - Dealing with many degrees of freedom: PCA 
-- ML based inference
+- Simulation based inference and EFT
 
 #### Hand-on session
 - MC simulation with Madgraph
