@@ -19,29 +19,40 @@ We’ll use ```SMEFTsim_topU3l_MwScheme``` (from SMEFTsim3.0 https://github.com/
 
 ---
 **MG Syntax**
+
 To generate a processes, simply use generate
+
 Example:
 ```
 generate p p > t t~
 ```
+
 will generate events with a tt pair resulting from proton-proton collisions
 
 **MG Syntax – decays**
+
 We can build upon this using additional options such as specifying decays
+
 ```generate p p > t t~, (t > b l+ vl), (t~ > b~ j j)```
+
 will ensure the top quark decays leptonically and the anti-top decays hadronically
+
 The “,” syntax allows you to specify the decays, and the parathesis are syntactic sugar
 
 
 **MG Syntax – more than one process**
+
 The add process command will allows you to add more processes
+
 ```
 generate p p > t t~, (t > b l+ vl), (t~ > b~ j j)
 add process p p > t t~, (t > b j j), (t~ > b~ l- vl~)
 ```
 
 will cover both possible decay modes for the semi-leptonic decay of the top quark
+
 Another option is
+
 ```
 generate p p > t t~ > b l+ vl b~ j j
 add process p p > t t~ > b j j b~ l- vl~
@@ -50,50 +61,66 @@ add process p p > t t~ > b j j b~ l- vl~
 The main difference is this command will include off-shell top quarks
 
 **A few words on decays**
+
 Having MG decay particles has its advantages, mainly
+
 ```
 generate p p > t t~, (t > b l+ vl), (t~ > b~ l- vl~)
 ```
+
 will pass the full spin correlation between the top quarks to the final-state leptons
+
 However, specifying the decays in MG will significantly slow down the generation time
+
 The other options are:
+
 **MadSpin** – good for standard analyses like spin correlation; known to have issues with EFT
 reweighting, so this is not recommended for EFT analyses
+
 **Pythia** – Simply specify ```generate p p > t t~``` and let Pythia handle the decay of the
 tops
 
 ---
 **How to remove particles**
+
 If we wanted to produce ttZ-like processes, we could use
 ```generate p p > t t~ l+ l-```
+
 However, this will include all possible ways to produce two leptons,
 including H → W+W−→ ℓ+ℓ− etc.
+
 To exclude the Higgs boson from this process we can use
+
 ```generate p p > t t~ l+ l- / h```
 
 ---
 **Including EFT effects**
+
 Once you have a model installed (or specified in an extramodels card) you can import it
-using
-**import model SMEFTsim_topU3l_MwScheme_UFO**
+using `import model SMEFTsim_topU3l_MwScheme_UFO`
+
 This will instruct MG to load the SMEFTsim top U3l model, which will add EFT diagrams
-e.g. ```p p > t t~``` will include both SM production (gluon-gluon fusion, qq annihilation) and
-EFT vertices involving top quarks, gluons, and light quarks
+
+e.g. ```p p > t t~``` will include both SM production (gluon-gluon fusion, qq annihilation) and EFT vertices involving top quarks, gluons, and light quarks
 
 **Extra partons**
-Not possible for single-t processes
-When possible, it is recommended to include one additional parton/final-state jet
+
+Not possible for single-t processes. When possible, it is recommended to include one additional parton/final-state jet
+
 For a tt process this would be
+
 ```
 generate p p > t t~
 add process p p > t t~ j
 ```
-The extra jet brings our leading-order (LO) EFT simulations closer to
-next-to-leading order (NLO)
+
+The extra jet brings our leading-order (LO) EFT simulations closer to next-to-leading order (NLO)
+
 A value for xqcut is also needed, which essentially tells MG what part of the phase space it should fill in for the extra jet
 
 **EFT options**
-* The SMEFTsim model has a few options to allow you to specify what EFT effects you want
+
+The SMEFTsim model has a few options to allow you to specify what EFT effects you want
 * ```NP``` tells MG to enable “new physics”
 * ```NP=1``` would allow for single insertion (one EFT vertex per diagram). This is the standard setting for EFT production.
 * ```NP=2``` would allow double insertions, which is useful for probing both production and decay
@@ -104,7 +131,9 @@ A value for xqcut is also needed, which essentially tells MG what part of the ph
 
 ---
 **MG reweighting**
+
 We typically us the reweighting procedure in MG instead of generating several gridpacks for dedicated EFT points.
+
 A reweight card is included to tell MG what values we want:![](https://codimd.web.cern.ch/uploads/upload_fdf08f0a58c6c26070220267732e1e5b.png)
 
 The templates needed can be generated in two complementary ways either by *amplitude decomposition* or with *reweighting*. 
