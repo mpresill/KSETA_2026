@@ -247,7 +247,7 @@ python scripts/make_param_card.py -p Higgs-VBF -c cards/Higgs-VBF/config.json -o
 
 If you are running within the Docker, you need to apply this little patch:
 ```sh
-sed -i 's/nb_core = .*/nb_core = 1/' /workdir/EFT2Obs/MG5_aMC_v2_9_16/input/mg5_configuration.txt
+sed -i 's/nb_core = .*/nb_core = 1/' MG5_aMC_v2_9_16/input/mg5_configuration.txt
 ```
 
 
