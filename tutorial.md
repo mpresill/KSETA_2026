@@ -60,11 +60,6 @@ source env.sh
 Note that to make sure everyone has a consistent software environment.
 Once the installation is complete, we will source the `setup.sh` script to set all the environment variables correctly. 
 
-Note that you will need to run this in every new session:
-```sh
-source setup.sh
-```
-
 ## Install the SMEFTsim models
 
 First we will work with the EFT2Obs package. A script is provided to download and install the SMEFTsim UFO models. 
@@ -115,6 +110,8 @@ Block SMEFT
 Madgraph has some special (and slightly non-intuitive) behavior regarding the values of these parameters. The important point for us is that if we set any to zero in the restrict file, their contributions will never be in the amplitudes that are generated.
 
 So if we wanted to include all possible SMEFT effects we could use the `restrict_massless.dat` that's already included. In this exercise we will consider a more limited set of operators - just the bosonic `cHbox`, `cHDD`, `cHW`, `cHB` and `cHWB`. This is just for speed in this exercise, normally we would want to include all possible effects.
+
+If you want to visualize the EFT operators and the vertices to which they can have an effect, you can refer to this [visualization tool](https://rahulb.web.cern.ch/SMEFTviz.html).
 
 A restrict file that limits us to these operators is in the EFT-HandsOn directory, so we can copy it into the model directory:
 
